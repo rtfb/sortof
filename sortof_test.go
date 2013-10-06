@@ -2,7 +2,6 @@ package sortof
 
 import (
     "fmt"
-    "sort"
     "testing"
 )
 
@@ -22,7 +21,7 @@ func TestInts(t *testing.T) {
         {arr: []int{123, 124, 125, 126}, expected: "[123 124 125 126]"},
     }
     for i, c := range cases {
-        sort.Ints(c.arr)
+        Ints(c.arr)
         got := fmt.Sprintf("%v", c.arr)
         if got != c.expected {
             t.Fatalf("Test case %d failed.\nExpected: %v\nGot: %v\n",

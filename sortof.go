@@ -56,3 +56,15 @@ func printOrgans(s []*Organ) {
         fmt.Printf("%-8s (%v)\n", o.Name, o.Weight)
     }
 }
+
+func Ints(arr []int) {
+    for i, _ := range arr {
+        for j, _ := range arr {
+            if arr[i] < arr[j] {
+                tmp := arr[j]
+                arr[j] = arr[i]
+                arr[i] = tmp
+            }
+        }
+    }
+}
