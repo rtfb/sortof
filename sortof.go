@@ -52,7 +52,8 @@ func main() {
     */
     a13 := []int{866, 700, 148, 587, 434, 898, 828, 893, 126, 657, 801, 868, 542}
     fmt.Printf("data: %v\n", a13)
-    mergesort(a13)
+    //mergesort(a13)
+    heapsort(a13)
     fmt.Printf("result: %v\n", a13)
 }
 
@@ -120,6 +121,39 @@ func mergesort(arr []int) {
     }
 }
 
+func parent(x int) int {
+    if x == 0 {
+        return 0
+    }
+    if x % 2 == 0 {
+        return (x - 2) / 2
+    } else {
+        return (x - 1) / 2
+    }
+}
+
+func heapify(arr []int, base, start int) {
+    for i := start; i < len(arr); i++ {
+        p := parent(i - base) + base
+        j := i
+        for arr[p] > arr[j] {
+            tmp := arr[p]
+            arr[p] = arr[j]
+            arr[j] = tmp
+            j = p
+            p = parent(j - base) + base
+        }
+    }
+}
+
+func heapsort(arr []int) {
+    heapify(arr, 0, 1)
+    for i := 2; i < len(arr); i++ {
+        heapify(arr, i - 1, i)
+    }
+}
+
 func Ints(arr []int) {
-    mergesort(arr)
+    //mergesort(arr)
+    heapsort(arr)
 }
