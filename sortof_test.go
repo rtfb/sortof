@@ -53,3 +53,30 @@ func TestWalkTree(t *testing.T) {
 		}
 	}
 }
+
+func TestCompareTrees(t *testing.T) {
+	var cases = []struct {
+		t1       *Tree
+		t2       *Tree
+		expected bool
+	}{
+		{nil, nil, true},
+		{&Tree{"a", nil}, nil, false},
+		{nil, &Tree{"a", nil}, false},
+		{&Tree{"a", nil}, &Tree{"a", nil}, true},
+		{&Tree{"a", nil}, &Tree{"b", nil}, false},
+		{&Tree{"a", []*Tree{&Tree{"b", nil}}},
+			&Tree{"a", []*Tree{&Tree{"b", nil}}}, true},
+		{&Tree{"a", []*Tree{&Tree{"b", nil}}},
+			&Tree{"x", []*Tree{&Tree{"b", nil}}}, false},
+		{&Tree{"a", []*Tree{&Tree{"b", nil}, &Tree{"c", nil}}},
+			&Tree{"a", []*Tree{&Tree{"b", nil}, &Tree{"c", nil}}}, true},
+	}
+	for _, c := range cases {
+		result := compareTrees(c.t1, c.t2)
+		if result != c.expected {
+			t.Fatalf("Wrong result comparing trees %#v and %#v. Expected %v, but got %v",
+				c.t1, c.t2, c.expected, result)
+		}
+	}
+}
