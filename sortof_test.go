@@ -31,3 +31,25 @@ func TestInts(t *testing.T) {
 		}
 	}
 }
+
+func TestWalkTree(t *testing.T) {
+	var cases = []struct {
+		input    *Tree
+		expected string
+	}{
+		{nil, ""},
+		{&Tree{"a", nil}, "a"},
+		{&Tree{"a", []*Tree{&Tree{"b", nil}}}, "a\n.\tb"},
+		{&Tree{"a", []*Tree{&Tree{"b", nil}, &Tree{"c", nil}}}, "a\n.\tb\n.\tc"},
+		{&Tree{"a", []*Tree{&Tree{"b",
+			[]*Tree{&Tree{"x", nil}, &Tree{"y", nil}, &Tree{"z", nil}}},
+			&Tree{"c", nil}}}, "a\n.\tb\n.\t.\tx\n.\t.\ty\n.\t.\tz\n.\tc"},
+	}
+	for _, c := range cases {
+		result := printTree(c.input)
+		if result != c.expected {
+			t.Fatalf("Bad result walking tree %#v. Expected\n%v\n, but got\n%v",
+				c.input, c.expected, result)
+		}
+	}
+}
