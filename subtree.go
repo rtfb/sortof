@@ -44,3 +44,47 @@ func compareTrees(t1, t2 *Tree) bool {
 	}
 	return false
 }
+
+func parseTree_r(input string) ([]*Tree, int) {
+	if input == "" || input == "()" {
+		return nil, 0
+	}
+	result := []*Tree(nil)
+	i := 0
+	if input[i] == '(' {
+		i += 1
+	}
+	for i < len(input) {
+		if input[i] == ' ' {
+			i += 1
+			continue
+		}
+		if input[i] == ')' {
+			return result, i
+		}
+		if result == nil {
+			result = make([]*Tree, 0, 0)
+		}
+		if input[i] == '(' {
+			i += 1
+			kids, charsEaten := parseTree_r(input[i:len(input)])
+			result[len(result)-1].children = kids
+			i += charsEaten + 1
+			continue
+		}
+		result = append(result, &Tree{input[i : i+1], nil})
+		i += 1
+	}
+	return nil, 0
+}
+
+func parseTree(input string) *Tree {
+	if input == "" || input == "()" {
+		return nil
+	}
+	if input[0] == '(' && len(input) > 1 && input[1] != ' ' {
+		kids, _ := parseTree_r(input[2:len(input)])
+		return &Tree{data: input[1:2], children: kids}
+	}
+	return nil
+}

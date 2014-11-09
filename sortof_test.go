@@ -80,3 +80,32 @@ func TestCompareTrees(t *testing.T) {
 		}
 	}
 }
+
+func TestParseStringToTree(t *testing.T) {
+	var cases = []struct {
+		input    string
+		expected *Tree
+	}{
+		{"", nil},
+		{"()", nil},
+		{"(a)", &Tree{"a", nil}},
+		{"(a(b))", &Tree{"a", []*Tree{&Tree{"b", nil}}}},
+		{"(a(b c))", &Tree{"a", []*Tree{&Tree{"b", nil}, &Tree{"c", nil}}}},
+		{"(a(b(x y)c))", &Tree{"a", []*Tree{&Tree{"b",
+			[]*Tree{&Tree{"x", nil}, &Tree{"y", nil}}},
+			&Tree{"c", nil}}}},
+		{"(a(b(x y)c d))", &Tree{"a", []*Tree{&Tree{"b",
+			[]*Tree{&Tree{"x", nil}, &Tree{"y", nil}}},
+			&Tree{"c", nil}, &Tree{"d", nil}}}},
+		{"(a(b(x y)c d(q)))", &Tree{"a", []*Tree{&Tree{"b",
+			[]*Tree{&Tree{"x", nil}, &Tree{"y", nil}}},
+			&Tree{"c", nil}, &Tree{"d", []*Tree{&Tree{"q", nil}}}}}},
+	}
+	for _, c := range cases {
+		result := parseTree(c.input)
+		if !compareTrees(result, c.expected) {
+			t.Fatalf("Wrong result parsing tree %q. Expected %v, but got %v",
+				c.input, printTree(c.expected), printTree(result))
+		}
+	}
+}
