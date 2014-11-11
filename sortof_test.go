@@ -26,7 +26,7 @@ func TestInts(t *testing.T) {
 		Ints(c.arr)
 		got := fmt.Sprintf("%v", c.arr)
 		if got != c.expected {
-			t.Fatalf("Test case %d failed.\nExpected: %v\nGot: %v\n",
+			t.Errorf("Test case %d failed.\nExpected: %v\nGot: %v\n",
 				i, c.expected, got)
 		}
 	}
@@ -48,8 +48,8 @@ func TestWalkTree(t *testing.T) {
 	for _, c := range cases {
 		result := printTree(c.input)
 		if result != c.expected {
-			t.Fatalf("Bad result walking tree %#v. Expected\n%v\n, but got\n%v",
-				c.input, c.expected, result)
+			t.Errorf("printTree(%#v) =\n%v;\nwant\n%v",
+				c.input, result, c.expected)
 		}
 	}
 }
@@ -75,8 +75,8 @@ func TestCompareTrees(t *testing.T) {
 	for _, c := range cases {
 		result := compareTrees(c.t1, c.t2)
 		if result != c.expected {
-			t.Fatalf("Wrong result comparing trees %#v and %#v. Expected %v, but got %v",
-				c.t1, c.t2, c.expected, result)
+			t.Errorf("compareTrees(%#v, %#v) = %v, want %v",
+				c.t1, c.t2, result, c.expected)
 		}
 	}
 }
@@ -104,8 +104,8 @@ func TestParseStringToTree(t *testing.T) {
 	for _, c := range cases {
 		result := parseTree(c.input)
 		if !compareTrees(result, c.expected) {
-			t.Fatalf("Wrong result parsing tree %q. Expected %v, but got %v",
-				c.input, printTree(c.expected), printTree(result))
+			t.Errorf("parseTree(%q) = %v; want %v",
+				c.input, printTree(result), printTree(c.expected))
 		}
 	}
 }
