@@ -34,15 +34,17 @@ func compareTrees(t1, t2 *Tree) bool {
 	if t1 == nil || t2 == nil {
 		return false
 	}
-	if t1.data == t2.data && t1.children == nil && t2.children == nil {
-		return true
+	if t1.data != t2.data {
+		return false
 	}
 	if t1.data == t2.data && len(t1.children) == len(t2.children) {
 		for i, child := range t1.children {
-			return compareTrees(child, t2.children[i])
+			if !compareTrees(child, t2.children[i]) {
+				return false
+			}
 		}
 	}
-	return false
+	return true
 }
 
 func parseTree_r(input string) ([]*Tree, int) {

@@ -71,6 +71,8 @@ func TestCompareTrees(t *testing.T) {
 			&Tree{"x", []*Tree{&Tree{"b", nil}}}, false},
 		{&Tree{"a", []*Tree{&Tree{"b", nil}, &Tree{"c", nil}}},
 			&Tree{"a", []*Tree{&Tree{"b", nil}, &Tree{"c", nil}}}, true},
+		{&Tree{"a", []*Tree{&Tree{"b", nil}, &Tree{"c", nil}}},
+			&Tree{"a", []*Tree{&Tree{"b", nil}, &Tree{"d", nil}}}, false},
 	}
 	for _, c := range cases {
 		result := compareTrees(c.t1, c.t2)
