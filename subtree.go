@@ -37,11 +37,12 @@ func compareTrees(t1, t2 *Tree) bool {
 	if t1.data != t2.data {
 		return false
 	}
-	if t1.data == t2.data && len(t1.children) == len(t2.children) {
-		for i, child := range t1.children {
-			if !compareTrees(child, t2.children[i]) {
-				return false
-			}
+	if len(t1.children) != len(t2.children) {
+		return false
+	}
+	for i, child := range t1.children {
+		if !compareTrees(child, t2.children[i]) {
+			return false
 		}
 	}
 	return true
