@@ -91,3 +91,21 @@ func parseTree(input string) *Tree {
 	}
 	return nil
 }
+
+func SearchSubtree(container, query *Tree) *Tree {
+	if query == nil {
+		return container
+	}
+	if container == nil {
+		return nil
+	}
+	if compareTrees(container, query) {
+		return container
+	}
+	for _, c := range container.children {
+		if SearchSubtree(c, query) != nil {
+			return c
+		}
+	}
+	return nil
+}

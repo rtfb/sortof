@@ -113,3 +113,28 @@ func TestParseStringToTree(t *testing.T) {
 		}
 	}
 }
+
+func TestSubtree(t *testing.T) {
+	var cases = []struct {
+		container string
+		search    string
+		expected  string
+	}{
+		{"", "", ""},
+		{"(a)", "", "a"},
+		{"", "(a)", ""},
+		{"(a)", "(a)", "a"},
+		{"(b(a))", "(a)", "a"},
+		{"(a(b(x y)c d))", "(b(x y))", "b"},
+		{"(a(b(x y)c d))", "(b(p q))", ""},
+	}
+	for _, c := range cases {
+		result := SearchSubtree(parseTree(c.container), parseTree(c.search))
+		if (c.expected == "" && result != nil) ||
+			(c.expected != "" && result == nil) ||
+			(result != nil && result.data != c.expected) {
+			t.Errorf("SearchSubtree(%q, %q) = %v; want %v",
+				c.container, c.search, result, c.expected)
+		}
+	}
+}
