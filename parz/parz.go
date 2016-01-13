@@ -16,14 +16,18 @@ type visitor struct {
 func (v *visitor) Visit(node ast.Node) ast.Visitor {
 	switch n := node.(type) {
 	case *ast.CallExpr:
-		call, _ := n.Fun.(*ast.Ident)
-		if call != nil {
-			fmt.Printf("call: %q\n", call.Name)
+		var call string
+		switch fun := n.Fun.(type) {
+		case *ast.Ident:
+			call = fmt.Sprintf("%s", n.Fun)
+		case *ast.SelectorExpr:
+			call = fmt.Sprintf("%s.%s", fun.X, fun.Sel)
 		}
+		v.allCalls = append(v.allCalls, call)
 	case *ast.AssignStmt:
 		if len(n.Lhs) > 0 {
 			if id, ok := n.Lhs[0].(*ast.Ident); ok {
-				fmt.Printf("assign: %q\n", id.Name)
+				v.allAssigns = append(v.allAssigns, id.Name)
 			}
 		}
 	}
@@ -42,5 +46,13 @@ func main() {
 			panic(err) // XXX: better error handling
 		}
 		ast.Walk(v, f)
+	}
+	fmt.Println("Calls:")
+	for _, c := range v.allCalls {
+		fmt.Printf("\t%s\n", c)
+	}
+	fmt.Println("Assigns:")
+	for _, a := range v.allAssigns {
+		fmt.Printf("\t%s\n", a)
 	}
 }
