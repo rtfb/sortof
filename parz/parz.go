@@ -34,6 +34,17 @@ func (v *visitor) Visit(node ast.Node) ast.Visitor {
 	return v
 }
 
+func dump(v *visitor) {
+	fmt.Println("Calls:")
+	for _, c := range v.allCalls {
+		fmt.Printf("\t%s\n", c)
+	}
+	fmt.Println("Assigns:")
+	for _, a := range v.allAssigns {
+		fmt.Printf("\t%s\n", a)
+	}
+}
+
 func main() {
 	files := []string{
 		"parz.go",
@@ -47,12 +58,29 @@ func main() {
 		}
 		ast.Walk(v, f)
 	}
-	fmt.Println("Calls:")
-	for _, c := range v.allCalls {
-		fmt.Printf("\t%s\n", c)
+	dump(v)
+	fmt.Println("===============")
+	src := `func foo() bool {
+	temp := true
+	return foo_r(temp)
+}`
+	vv := &visitor{}
+	vv.fileSet = token.NewFileSet()
+	prefix := "package placeholder\n"
+	tree, err := parser.ParseFile(vv.fileSet, "", prefix+src, 0)
+	if err != nil {
+		panic(err)
 	}
-	fmt.Println("Assigns:")
-	for _, a := range v.allAssigns {
-		fmt.Printf("\t%s\n", a)
+	ast.Walk(vv, tree)
+	dump(vv)
+	fmt.Println("===============")
+	src = "blerk(\"param\")"
+	vvv := &visitor{}
+	vvv.fileSet = token.NewFileSet()
+	expr, err := parser.ParseExpr(src)
+	if err != nil {
+		panic(err)
 	}
+	ast.Walk(vvv, expr)
+	dump(vvv)
 }
