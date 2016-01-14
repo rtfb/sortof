@@ -34,6 +34,24 @@ func (v *visitor) Visit(node ast.Node) ast.Visitor {
 	return v
 }
 
+type placeholderVisitor struct {
+	meat    ast.Node
+	fileSet *token.FileSet
+}
+
+func (v *placeholderVisitor) Visit(node ast.Node) ast.Visitor {
+	switch n := node.(type) {
+	case *ast.FuncDecl:
+		fmt.Printf("FuncDecl: %q\n", n.Name)
+		vv := &visitor{}
+		vv.fileSet = token.NewFileSet()
+		ast.Walk(vv, n)
+		dump(vv)
+		return nil
+	}
+	return v
+}
+
 func dump(v *visitor) {
 	fmt.Println("Calls:")
 	for _, c := range v.allCalls {
@@ -43,6 +61,27 @@ func dump(v *visitor) {
 	for _, a := range v.allAssigns {
 		fmt.Printf("\t%s\n", a)
 	}
+}
+
+func runWithBoilerplate() {
+	fmt.Println("===== boilerplate ==========")
+	src := `package placeholder
+func noise() {
+	a := 0
+	b := noooize()
+	c := moarnoize()
+}
+func placeholder() {
+	signal := true
+	return signalProcessor(temp)
+}`
+	v := &placeholderVisitor{}
+	v.fileSet = token.NewFileSet()
+	tree, err := parser.ParseFile(v.fileSet, "", src, 0)
+	if err != nil {
+		panic(err)
+	}
+	ast.Walk(v, tree)
 }
 
 func main() {
@@ -83,4 +122,5 @@ func main() {
 	}
 	ast.Walk(vvv, expr)
 	dump(vvv)
+	runWithBoilerplate()
 }
