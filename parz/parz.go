@@ -5,6 +5,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	//"reflect"
 )
 
 type visitor struct {
@@ -34,6 +35,16 @@ func (v *visitor) Visit(node ast.Node) ast.Visitor {
 	return v
 }
 
+type channelPusher struct {
+	fileSet *token.FileSet
+	queue   chan *ast.Node
+}
+
+func (v *channelPusher) Visit(node ast.Node) ast.Visitor {
+	v.queue <- &node
+	return v
+}
+
 type placeholderVisitor struct {
 	meat    ast.Node
 	fileSet *token.FileSet
@@ -50,6 +61,17 @@ func (v *placeholderVisitor) Visit(node ast.Node) ast.Visitor {
 		return nil
 	}
 	return v
+}
+
+func equalNodes(n1, n2 *ast.Node) bool {
+	//if reflect.TypeOf(n1).Name() != reflect.TypeOf(n2).Name() {
+	//	return false
+	//}
+	if n1.Name != n2.Name {
+		return false
+	}
+	// TODO: compare other criteria
+	return true
 }
 
 func dump(v *visitor) {
@@ -82,6 +104,60 @@ func placeholder() {
 		panic(err)
 	}
 	ast.Walk(v, tree)
+}
+
+func compareTwoTrees(src string) {
+	v1 := &channelPusher{}
+	v1.fileSet = token.NewFileSet()
+	v1.queue = make(chan *ast.Node)
+
+	v2 := &channelPusher{}
+	v2.fileSet = token.NewFileSet()
+	v2.queue = make(chan *ast.Node)
+
+	tree1, err := parser.ParseExpr(src)
+	if err != nil {
+		panic(err)
+	}
+
+	src2 := "x + 2*y"
+	tree2, err := parser.ParseExpr(src2)
+	if err != nil {
+		panic(err)
+	}
+	done := make(chan struct{})
+	defer close(done)
+
+	go func() {
+		ast.Walk(v1, tree1)
+		close(v1.queue)
+		done <- struct{}{}
+	}()
+	go func() {
+		ast.Walk(v2, tree2)
+		close(v2.queue)
+		done <- struct{}{}
+	}()
+
+	var n1, n2 *ast.Node
+	quit := false
+	for !quit {
+		select {
+		case n1 = <-v1.queue:
+		case n2 = <-v2.queue:
+		case <-done:
+			quit = true
+		}
+		if n1 != nil && n2 != nil {
+			if !equalNodes(n1, n2) {
+				println("!equalNodes")
+				break
+			}
+			println("equalNodes")
+			n1 = nil
+			n2 = nil
+		}
+	}
 }
 
 func main() {
@@ -123,4 +199,5 @@ func main() {
 	ast.Walk(vvv, expr)
 	dump(vvv)
 	runWithBoilerplate()
+	compareTwoTrees(src)
 }
