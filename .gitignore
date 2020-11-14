@@ -1,2 +1,4 @@
 sortof
 try-pic/*.png
+pascal/*.o
+pascal/fib
