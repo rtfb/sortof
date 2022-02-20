@@ -30,7 +30,7 @@ def ffmpeg(input_path):
     tmp_path = os.path.join(tmp_dir, basename)
     vf = '"pad=width=3412:height=1920:x=1166:y=0:color=black"'
     other_flags = '-nostats -preset veryfast -codec:a copy'
-    cmd = 'ffmpeg -i {} -vf {} {} {}'.format(
+    cmd = 'ffmpeg -y -i {} -vf {} {} {}'.format(
         input_path, vf, other_flags, tmp_path)
     logging.info(cmd)
     process = subprocess.Popen(cmd,
@@ -42,9 +42,12 @@ def ffmpeg(input_path):
     if stderr:
         logging.info('ffmpeg stderr: ' + str(stderr))
     logging.info('duration: ' + str(datetime.now() - start))
+    shutil.chown(tmp_path, 'rtfb', 'users')
     output_path = os.path.join('/video', basename)
     output_tmp = output_path + '.tmp'
     shutil.move(tmp_path, output_tmp)
+    shutil.chown(output_tmp, 'rtfb', 'users')
+    os.chmod(output_tmp, 0o666)
     os.rename(output_tmp, output_path)
 
 
