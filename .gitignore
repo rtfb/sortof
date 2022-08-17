@@ -5,3 +5,7 @@ pascal/fib
 rvv01/main.o
 rvv01/rvv01
 rvv01/vec.o
+/try-zig/zig-linux-x86_64-0.9.1.tar.xz
+/try-zig/zig-linux-x86_64-0.9.1
+/try-zig/a.out
+/try-zig/riscv.o
