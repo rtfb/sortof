@@ -2,3 +2,6 @@ sortof
 try-pic/*.png
 pascal/*.o
 pascal/fib
+rvv01/main.o
+rvv01/rvv01
+rvv01/vec.o
