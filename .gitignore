@@ -9,3 +9,5 @@ rvv01/vec.o
 /try-zig/zig-linux-x86_64-0.9.1
 /try-zig/a.out
 /try-zig/riscv.o
+/manim/__pycache__
+/manim/media
