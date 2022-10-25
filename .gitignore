@@ -11,3 +11,5 @@ rvv01/vec.o
 /try-zig/riscv.o
 /manim/__pycache__
 /manim/media
+/manim/dockerized/__pycache__
+/manim/dockerized/media
