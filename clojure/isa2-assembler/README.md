@@ -8,9 +8,10 @@ Download from http://example.com/FIXME.
 
 ## Usage
 
-FIXME: explanation
-
-    $ java -jar isa2-assembler-0.1.0-standalone.jar [args]
+Build:
+    host $ make   # will build and run the Docker image containing Closure dev env
+    container $ lein uberjar
+    host $ java -jar target/uberjar/isa2-assembler-0.1.0-SNAPSHOT-standalone.jar
 
 ## Options
 
