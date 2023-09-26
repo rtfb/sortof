@@ -1,8 +1,8 @@
 module out_chunks (
     input clk,
     input reset,
-    output have_output,
-    output [CHUNK_SIZE_BITS-1:0]out_bits
+    output reg have_output,
+    output reg [CHUNK_SIZE_BITS-1:0]out_bits
 );
     localparam CHUNK_SIZE_BITS = 4;
     localparam NUM_CHUNKS = 8;
@@ -27,8 +27,7 @@ module out_chunks (
             have_output <= 0;
         end else if (!done_output) begin
             {done_output, bit_addr} <= bit_addr + 1;
+            out_bits <= internal_data[bit_addr*CHUNK_SIZE_BITS +: CHUNK_SIZE_BITS];
         end
     end
-
-    assign out_bits = internal_data[bit_addr*CHUNK_SIZE_BITS-1 -: CHUNK_SIZE_BITS];
 endmodule
