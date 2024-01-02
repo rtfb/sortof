@@ -6,6 +6,10 @@
 _start:
     li      t0, 0x1800
     csrc    mstatus, t0
+    li      t0, 0x8fffffff
+    csrw    pmpaddr0, t0
+    li      t0, 0xf
+    csrw    pmpcfg0, t0
     li      t0, 0x802
     csrs    mstatus, t0
     li      t0, 0xa0
