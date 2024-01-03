@@ -26,8 +26,18 @@ _start:
     mret
 
 mtrap:
+    # advance mtimecmp to clear the current MTIP bit in mip:
+    li      t1, 0x2004000
+    ld      t0, 0(t1)
+    li      t2, 500000
+    add     t0, t0, t2
+    sd      t0, 0(t1)
+    # set the STIP bit to cause mret to trap into strap:
     li      t0, 0x20
-    csrs    mip, t0
+    csrw    mip, t0
+    # set mstatus.SIE=1 again because it gets reset:
+    li      t0, 0x2
+    csrs    mstatus, t0
     mret
 
 supervisor:
