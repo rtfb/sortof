@@ -18,6 +18,7 @@ func init() {
 	for i := 0; i < size; i++ {
 		users[i].Active = i%5 > 0 // 20% non active
 		users[i].Country = countries[i%len(countries)]
+		users[i].Icon = make([]byte, 128*128)
 	}
 }
 

@@ -1,6 +1,6 @@
 package main
 
-type Image [128 * 128]byte
+type Image []byte
 
 type User struct {
 	Login   string
